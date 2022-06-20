@@ -1,40 +1,57 @@
 <template>
-  <BaseCard>
-    <form @submit.prevent="submitForm">
-      <div class="form-control">
-        <label for="email">E-Mail
-          <input
-            id="email"
-            v-model.trim="email"
-            type="email"
-          >
-        </label>
-      </div>
-      <div class="form-control">
-        <label for="password">Password
-          <input
-            id="password"
-            v-model.trim="password"
-            type="password"
-          >
-        </label>
-      </div>
-      <p v-if="!formIsValid">
-        Please enter correct email and password. Pasword must be at least 6 char long!
-      </p>
-      <BaseButton>{{ submitButtonCaption }}</BaseButton>
-      <BaseButton
-        type="button"
-        mode="flat"
-        @click="switchAuthMode"
-      >
-        {{ switchModeButtonCaption }}
-      </BaseButton>
-    </form>
-  </BaseCard>
+  <div>
+    <BaseDialog
+      :show="!!error"
+      title="An error occured..."
+      @close="handleError"
+    >
+      {{ error }}
+    </BaseDialog>
+    <BaseDialog
+      :show="isLoading"
+      title="Authenticating..."
+      fixed
+    >
+      <BaseSpinner />
+    </BaseDialog>
+    <BaseCard>
+      <form @submit.prevent="submitForm">
+        <div class="form-control">
+          <label for="email">E-Mail
+            <input
+              id="email"
+              v-model.trim="email"
+              type="email"
+            >
+          </label>
+        </div>
+        <div class="form-control">
+          <label for="password">Password
+            <input
+              id="password"
+              v-model.trim="password"
+              type="password"
+            >
+          </label>
+        </div>
+        <p v-if="!formIsValid">
+          Please enter correct email and password. Pasword must be at least 6 char long!
+        </p>
+        <BaseButton>{{ submitButtonCaption }}</BaseButton>
+        <BaseButton
+          type="button"
+          mode="flat"
+          @click="switchAuthMode"
+        >
+          {{ switchModeButtonCaption }}
+        </BaseButton>
+      </form>
+    </BaseCard>
+  </div>
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -42,6 +59,8 @@ export default {
       password: '',
       formIsValid: true,
       mode: 'login',
+      isLoading: false,
+      error: null,
     };
   },
   computed: {
@@ -59,20 +78,26 @@ export default {
     },
   },
   methods: {
-    submitForm() {
+    async submitForm() {
       this.formIsValid = true;
       if (this.email === '' || !this.email.includes('@') || this.password.length < 6) {
         this.formIsValid = false;
       }
-      // send http auth req.
-      if (this.mode === 'login') {
-        // ....
-      } else {
-        this.$store.dispatch('signup', {
+      this.isLoading = true;
+      try {
+        const signUpPayload = {
           email: this.email,
           password: this.password,
-        });
+        };
+        if (this.mode === 'login') {
+          await this.$store.dispatch('login', signUpPayload);
+        } else {
+          await this.$store.dispatch('signup', signUpPayload);
+        }
+      } catch (error) {
+        this.error = error.message || 'Somethign went wrong signing up';
       }
+      this.isLoading = false;
     },
     switchAuthMode() {
       if (this.mode === 'login') {
@@ -81,7 +106,9 @@ export default {
         this.mode = 'login';
       }
     },
-
+    handleError() {
+      this.error = null;
+    },
   },
 };
 </script>
