@@ -24,7 +24,7 @@ export default {
 
   async fetchRequests(context) {
     const coachId = context.rootGetters.userId;
-    const response = await fetch(`https://vue-http-demo-7b2c7-default-rtdb.firebaseio.com/requests/${coachId}.json`);
+    const response = await fetch(`https://vue-http-demo-7b2c7-default-rtdb.firebaseio.com/requests/${coachId}.json?auth=${context.rootGetters.token}`);
     const responseData = await response.json();
     if (!response.ok) {
       const error = new Error(responseData.message || 'Something went wrong fetching requests');

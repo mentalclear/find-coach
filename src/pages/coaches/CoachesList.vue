@@ -20,7 +20,14 @@
             Refresh
           </BaseButton>
           <BaseButton
-            v-if="!isCoach && !isLoading"
+            v-if="!isLoggedIn"
+            link
+            to="/auth?redirect=register"
+          >
+            Log In to Register as Coach
+          </BaseButton>
+          <BaseButton
+            v-if="isLoggedIn && !isCoach && !isLoading"
             link
             to="/register"
           >
@@ -87,6 +94,9 @@ export default {
     },
     isCoach() {
       return this.$store.getters['coaches/isCoach'];
+    },
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
     },
   },
   created() {

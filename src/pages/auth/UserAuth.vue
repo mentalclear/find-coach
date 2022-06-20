@@ -94,6 +94,8 @@ export default {
         } else {
           await this.$store.dispatch('signup', signUpPayload);
         }
+        const redirectUrl = this.$route.query.redirect ? 'register' : 'coaches';
+        this.$router.replace(`/${redirectUrl}`);
       } catch (error) {
         this.error = error.message || 'Somethign went wrong signing up';
       }

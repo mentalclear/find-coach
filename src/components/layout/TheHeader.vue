@@ -12,10 +12,20 @@
             All Coaches
           </RouterLink>
         </li>
-        <li>
+        <li v-if="isLoggedIn">
           <RouterLink to="/requests">
             Requests
           </RouterLink>
+        </li>
+        <li v-else>
+          <RouterLink to="/auth">
+            Log In
+          </RouterLink>
+        </li>
+        <li v-if="isLoggedIn">
+          <BaseButton @click="logOut">
+            Log Out
+          </BaseButton>
         </li>
       </ul>
     </nav>
@@ -23,6 +33,19 @@
 </template>
 
 <script>
+export default {
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
+    },
+  },
+  methods: {
+    logOut() {
+      this.$store.dispatch('logout');
+      this.$router.replace('/coaches');
+    },
+  },
+};
 </script>
 
 <style scoped>

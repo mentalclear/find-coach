@@ -9,11 +9,13 @@ export default {
       areas: data.areas,
     };
 
-    const response = await fetch(`https://vue-http-demo-7b2c7-default-rtdb.firebaseio.com/coaches/${userId}.json`, {
-      method: 'PUT',
-      body: JSON.stringify(coachData),
-    });
-
+    const response = await fetch(
+      `https://vue-http-demo-7b2c7-default-rtdb.firebaseio.com/coaches/${userId}.json?auth=${context.rootGetters.token}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(coachData),
+      },
+    );
     // const responseData = await response.json();
 
     if (!response.ok) {
