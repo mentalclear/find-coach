@@ -15,12 +15,14 @@ export default {
   },
 
   async auth(context, payload) {
+    const FBApiKey = 'AIzaSyDaS3aUX0jdOQHrGcV_K-UP554lvb_2hRA';
     const { mode } = payload;
     let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=';
     if (mode === 'signup') {
       url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=';
     }
-    const response = await fetch(`${url}${process.env.VUE_APP_FIREBASE_API_KEY}`, {
+    // const response = await fetch(`${url}${process.env.VUE_APP_FIREBASE_API_KEY}`, {
+    const response = await fetch(`${url}${FBApiKey}`, {
       method: 'POST',
       body: JSON.stringify({
         email: payload.email,
