@@ -10,12 +10,12 @@
       <BaseCard>
         <header>
           <h2>Interested? Reach out now!</h2>
-          <!-- <BaseButton
-          link
-          :to="contactLink"
-        >
-          Contact
-        </BaseButton> -->
+          <BaseButton
+            link
+            :to="contactLink"
+          >
+            Contact
+          </BaseButton>
           <RouterView />
         </header>
       </BaseCard>
@@ -56,7 +56,7 @@ export default {
       return `${this.selectedCoach.firstName} ${this.selectedCoach.lastName}`;
     },
     contactLink() {
-      return `${this.$route.path}/${this.id}/contact`;
+      return `${this.$route.path}/contact`;
     },
   },
   created() {
